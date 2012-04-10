@@ -1,0 +1,166 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <title>maplate</title>
+  <!-- css required by the javascript libraries we are using to load and display maps -->
+  <link rel="stylesheet" href="http://code.leafletjs.com/leaflet-0.3.1/leaflet.css">
+  <link rel="stylesheet" href="http://code.leafletjs.com/leaflet-0.3.1/leaflet.ie.css">
+  <link href="http://vizzuality.github.com/cartodb-leaflet/cartodb.css" rel="stylesheet" type="text/css">
+  <!-- our map will take up 100% of the browser window -->
+  <style>
+    body {
+      padding: 0;
+      margin: 0;
+    }
+    html, body, #map {
+      height: 100%;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <!-- div that will display the map that is set using below javascript -->
+  <div id="map"></div>
+
+  <!-- scripts -->
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+  <script src="http://code.leafletjs.com/leaflet-0.3.1/leaflet.js"></script>
+  <script type="text/javascript" src="http://vizzuality.github.com/cartodb-leaflet/wax.leaflet.min.js"></script>
+  <script type="text/javascript" src="http://vizzuality.github.com/cartodb-leaflet/cartodb-leaflet.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function() {
+ 
+      mapquestTilesWithLeaflet(); 
+      //mapboxTilesWithLeafletAndWax(); 
+      //mapboxTilesWithCartoDBData();
+      //stamenTilesWithCartoDBData();
+
+      /* 
+       * method 1 - straigt up leaflet
+       *
+       */
+      function mapquestTilesWithLeaflet() {
+
+        // create map object, point it to div with id map (above)
+        var map = new L.Map('map');
+        // set the latlon to be used for the map's center, this happens to be Chicago
+        var mapCenter = new L.LatLng(41.875185,-87.630043);
+        // set the initial zoom level
+        var mapZoom = 11;
+        // set the url and attribution (using mapquest server here)
+        var baseUrl = 'http://otile1.mqcdn.com/tiles/1.0.0/osm/{z}/{x}/{y}.jpg',
+            attrib = 'Map tiles by MapQuest',
+        // set the initial layer using the mapquest tiles
+            baseLayer = new L.TileLayer(baseUrl, {attribution: attrib, maxZoom:18});
+        // add the layer, center and zoom on it 
+        map.addLayer(baseLayer);
+        map.setView(mapCenter, mapZoom);
+      }
+
+      /* 
+       * method 2 - mapbox tiles using wax
+       *
+       */
+      function mapboxTilesWithLeafletAndWax() {
+        
+        // tile url from mapbox
+        var url = 'http://a.tiles.mapbox.com/v3/boundsj.barrachoinchicago.jsonp'
+
+        // use wax to render the mapbox tiles with leaflet
+        wax.tilejson(url, function(tilejson) {
+          map = new L.Map('map')
+           .setView(new L.LatLng(41.875185,-87.630043), 10)
+           .addLayer(new wax.leaf.connector(tilejson));
+        });
+      }
+
+      /*
+       * method 3 - mapbox tiles with points from cartodb
+       *
+       */
+      function mapboxTilesWithCartoDBData() {
+
+        // using mapbox streets tiles
+        var url = 'http://a.tiles.mapbox.com/v3/mapbox.mapbox-streets.jsonp'
+
+        // using wax with leaflet to load in tiles from mapbox and data from cartodb
+        wax.tilejson(url, function(tilejson) {
+          map = new L.Map('map')
+           .setView(new L.LatLng(41.875185,-87.630043), 10)
+           .addLayer(new wax.leaf.connector(tilejson));
+      
+          var cartodbLeaflet = new L.CartoDBLayer({
+            show_cartodb_logo: false,
+            map_canvas: 'map',
+            map: map,
+            user_name:'boundsj',
+            table_name: 'food_inspections',
+            query: "SELECT cartodb_id, the_geom_webmercator, aka_name FROM {{table_name}}",
+            tile_style: "#{{table_name}} {" + 
+                       "marker-fill:#FF6600;" + 
+                       "marker-line-color:white;" +
+                       "marker-line-width:3;" + 
+                       "marker-opacity:1;" + 
+                       "marker-line-opacity:1;" + 
+                       "marker-placement:point;" + 
+                       "marker-type:ellipse;" +
+                       "marker-allow-overlap:true;" + 
+                    "}",
+            infowindow: "SELECT cartodb_id, the_geom_webmercator, aka_name as Name, address as Address, " +
+              "facility_type as Type, " +
+              "violations as Violations, results " +
+              "FROM {{table_name}} WHERE cartodb_id={{feature}}",
+            auto_bound: false 
+          });
+        });
+      }
+      
+      /*
+       * method 4 - stamen tiles with points from cartodb
+       * 
+       */
+      function stamenTilesWithCartoDBData() {
+        
+        // make a map, using normal leaflet and stamen toner tiles
+        var map = new L.Map('map');
+        var mapCenter = new L.LatLng(41.875185,-87.630043);
+        var mapZoom = 11;
+        var baseUrl = 'http://{s}.tile.stamen.com/toner/{z}/{x}/{y}.jpg',
+            attrib = 'Map tiles by Stamen',
+            baseLayer = new L.TileLayer(baseUrl, {attribution: attrib, maxZoom:18});
+        map.addLayer(baseLayer);
+        map.setView(mapCenter, mapZoom);
+
+        var cartodb_leaflet = new L.CartoDBLayer({
+          show_cartodb_logo: false,
+          map_canvas: 'map',
+          map: map,
+          user_name:'boundsj',
+          table_name: 'food_inspections',
+          query: "SELECT cartodb_id, the_geom_webmercator, aka_name FROM {{table_name}}",
+          tile_style: "#{{table_name}} {" + 
+                     "marker-fill:white;" + 
+                     "marker-line-color:black;" +
+                     "marker-line-width:3;" + 
+                     "marker-opacity:1;" + 
+                     "marker-line-opacity:1;" + 
+                     "marker-placement:point;" + 
+                     "marker-type:ellipse;" +
+                     "marker-allow-overlap:true;" + 
+                  "}",
+          infowindow: "SELECT cartodb_id, the_geom_webmercator, aka_name as Name, address as Address, " +
+            "facility_type as Type, " +
+            "violations as Violations, results " +
+            "FROM {{table_name}} WHERE cartodb_id={{feature}}",
+          auto_bound: false 
+        });
+      }
+
+    });
+
+  </script>
+
+</body>
+</html>
+
+tamenTilesWithCartoDBData1GG1G
