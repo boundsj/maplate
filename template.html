@@ -29,14 +29,15 @@
   <script type="text/javascript" src="http://vizzuality.github.com/cartodb-leaflet/cartodb-leaflet.js"></script>
   <script type="text/javascript">
     $(document).ready(function() {
- 
+
+      // uncomment one method at a time to see the various recipes work 
       mapquestTilesWithLeaflet(); 
       //mapboxTilesWithLeafletAndWax(); 
       //mapboxTilesWithCartoDBData();
       //stamenTilesWithCartoDBData();
 
       /* 
-       * method 1 - straigt up leaflet
+       * recipe 1 - straigt up leaflet
        *
        */
       function mapquestTilesWithLeaflet() {
@@ -58,7 +59,7 @@
       }
 
       /* 
-       * method 2 - mapbox tiles using wax
+       * recipe 2 - mapbox tiles using wax
        *
        */
       function mapboxTilesWithLeafletAndWax() {
@@ -75,7 +76,7 @@
       }
 
       /*
-       * method 3 - mapbox tiles with points from cartodb
+       * recipe 3 - mapbox tiles with points from cartodb
        *
        */
       function mapboxTilesWithCartoDBData() {
@@ -116,7 +117,7 @@
       }
       
       /*
-       * method 4 - stamen tiles with points from cartodb
+       * recipe 4 - stamen tiles with points from cartodb
        * 
        */
       function stamenTilesWithCartoDBData() {
