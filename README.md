@@ -31,7 +31,7 @@ The template.html file has javascript with 4 recipes. At the top of the file you
 function (recipe) at a time and refresh this template.html file in your browser to see how they look.
  Here is an explanation of each recipe:
 
-Recipe 1:
+_Recipe 1:_
 This function simply displays tiles from MapQuest using leafet.
 You can change the tile server url to show tiles from other places (make sure to give proper attribution!). For 
 example, let's use Stamen's watercolor map tiles:
@@ -52,13 +52,13 @@ every time you manipulate the map, leaflet goes back to the tile server and requ
 tiles based on the lat / lon you are viewing and the zoom level. Next, we'll look at 
 an example using MapBox tiles.
 
-Recipe 2:
+_Recipe 2:_
 This uses wax to grab tiles from mapbox. The mechanics work
 similarly but, because mapbox does not use the exact same algorithm and url scheme
 for serving tiles, wax is used to handle tile interaction like mapbox likes and
 normailze it for leaflet so leaflet can work like it normally does.
 
-Recipe 3:
+_Recipe 3:_
 This is similar to Recipe 2, except now we are using wax to grab not just the basemap tiles
 but also transparent (except for points) tiles that overlay on top of the basemap - points on a map!
 This is interesting because we are not using leaflet to insert individual markers in the layer. 
@@ -66,7 +66,7 @@ The cartodb/wax stack is actually rendering speical tiles that live on top of ou
 We could theoretically show many thousands of points in just a few seconds because the the dots
 are coming as tiles (not individual geojson).
 
-Recipe 4:
+_Recipe 4:_
 This is just like Recipe 3, except that we are not using wax to load the base layer tiles - we are using
 leaflet instead. This let's us grab tiles from a non-mapbox tile server (like Stamen in this case).
 
