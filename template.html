@@ -37,24 +37,31 @@
       //stamenTilesWithCartoDBData();
 
       /* 
-       * recipe 1 - straigt up leaflet
+       * recipe 1 - straight up leaflet
        *
        */
       function mapquestTilesWithLeaflet() {
-
-        // create map object, point it to div with id map (above)
+        
+        // Create map object and point it to the <div> with id 'map' (above).
         var map = new L.Map('map');
-        // set the latlon to be used for the map's center, this happens to be Chicago
+        
+        // Set the latlon to be used for the map's center. Here, we use Chicago.
         var mapCenter = new L.LatLng(41.875185,-87.630043);
-        // set the initial zoom level
+        
+        // Set the initial zoom level.
         var mapZoom = 11;
-        // set the url and attribution (using mapquest server here)
-        var baseUrl = 'http://otile1.mqcdn.com/tiles/1.0.0/osm/{z}/{x}/{y}.jpg',
-            attrib = 'Map tiles by MapQuest',
-        // set the initial layer using the mapquest tiles
-            baseLayer = new L.TileLayer(baseUrl, {attribution: attrib, maxZoom:18});
-        // add the layer, center and zoom on it 
+        
+        // Set the url and attribution (using mapquest server here).
+        var baseUrl = 'http://otile1.mqcdn.com/tiles/1.0.0/osm/{z}/{x}/{y}.jpg';
+        var attrib = 'Map tiles by MapQuest';
+        
+        // Set the initial layer using the mapquest tiles.
+        var baseLayer = new L.TileLayer(baseUrl, {attribution: attrib, maxZoom:18});
+        
+        // Add the layer.
         map.addLayer(baseLayer);
+        
+        // Center and zoom on the layer.
         map.setView(mapCenter, mapZoom);
       }
 
@@ -64,10 +71,10 @@
        */
       function mapboxTilesWithLeafletAndWax() {
         
-        // tile url from mapbox
+        // Tile url from mapbox.
         var url = 'http://a.tiles.mapbox.com/v3/boundsj.barrachoinchicago.jsonp'
-
-        // use wax to render the mapbox tiles with leaflet
+        
+        // Use wax to render the mapbox tiles with leaflet.
         wax.tilejson(url, function(tilejson) {
           map = new L.Map('map')
            .setView(new L.LatLng(41.875185,-87.630043), 10)
@@ -80,16 +87,17 @@
        *
        */
       function mapboxTilesWithCartoDBData() {
-
-        // using mapbox streets tiles
+        
+        // Using MapBox Streets tiles.
         var url = 'http://a.tiles.mapbox.com/v3/mapbox.mapbox-streets.jsonp'
-
-        // using wax with leaflet to load in tiles from mapbox and data from cartodb
+        
+        // Using wax with leaflet to load in tiles from mapbox and data from cartodb
         wax.tilejson(url, function(tilejson) {
+        
           map = new L.Map('map')
            .setView(new L.LatLng(41.875185,-87.630043), 10)
            .addLayer(new wax.leaf.connector(tilejson));
-      
+          
           var cartodbLeaflet = new L.CartoDBLayer({
             show_cartodb_logo: false,
             map_canvas: 'map',
@@ -113,6 +121,7 @@
               "FROM {{table_name}} WHERE cartodb_id={{feature}}",
             auto_bound: false 
           });
+        
         });
       }
       
@@ -122,7 +131,7 @@
        */
       function stamenTilesWithCartoDBData() {
         
-        // make a map, using normal leaflet and stamen toner tiles
+        // Make a map, using normal leaflet and stamen toner tiles
         var map = new L.Map('map');
         var mapCenter = new L.LatLng(41.875185,-87.630043);
         var mapZoom = 11;
@@ -131,7 +140,7 @@
             baseLayer = new L.TileLayer(baseUrl, {attribution: attrib, maxZoom:18});
         map.addLayer(baseLayer);
         map.setView(mapCenter, mapZoom);
-
+        
         var cartodb_leaflet = new L.CartoDBLayer({
           show_cartodb_logo: false,
           map_canvas: 'map',
@@ -156,7 +165,7 @@
           auto_bound: false 
         });
       }
-
+    
     });
 
   </script>
